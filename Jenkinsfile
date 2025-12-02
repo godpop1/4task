@@ -7,7 +7,7 @@ pipeline {
                 git url: 'https://github.com/godpop1/4task', credentialsId: 'add credentialsId'
             }
         }
-        
+
         stage('Build') {
             steps {
                 script {
@@ -18,6 +18,7 @@ pipeline {
                         currentBuild.result = 'UNSTABLE'
                         error("Build failed after clean step.")
                     }
+                }
             }
         }
 
@@ -31,20 +32,20 @@ pipeline {
                         currentBuild.result = 'UNSTABLE'
                         error("Tests failed.")
                     }
+                }
             }
         }
     }
 
     post {
         always {
-         cleanWs()
+            cleanWs()
         }
-     failure {
-        echo 'Build failed!'
+        failure {
+            echo 'Build failed!'
         }
-
-    success {
-        echo 'Build succeeded!'
+        success {
+            echo 'Build succeeded!'
         }
     }
 }
