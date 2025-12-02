@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/godpop1/4task', credentialsId: 'github-auth'
+                git branch: 'main', url: 'https://github.com/godpop1/4task', credentialsId: 'github-auth'
             }
         }
 
