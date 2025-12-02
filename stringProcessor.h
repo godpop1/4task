@@ -1,3 +1,4 @@
+#define STRING_MAX 512ull
 #ifndef STRING_PROCESSOR
 #define STRING_PROCESSOR
 #include <stdint.h>
@@ -7,22 +8,53 @@
 #include <stdio.h>
 #include "sort.h"
 #define STRING_MAX 512ull
-const int32_t get_str(const char const* msg, char* str, const int32_t limit)
-{
-    //paste your solution here
+
+const int32_t get_str(const char const* msg, char* str, const int32_t limit) {
+    if (!msg || !str || limit <= 0) {
+        return 0;
+    }
+    printf("%s", msg);
+    int32_t size = 0;
+    int c;
+    while (size < limit - 1 && (c = getchar()) != EOF && c != '\n') {
+        str[size++] = (char)c;
+    }
+    str[size] = '\0';
+    return size;
 }
-const size_t strlenn(const char* str)
-{
-    //paste your solution here
+
+const size_t strlenn(const char* str) {
+    if (!str) {
+        return 0;
+    }
+    const char* ptr = str;
+    while (*ptr) {
+        ptr++;
+    }
+    return ptr - str;
 }
-void strcopy(char* fStr, char* sStr, size_t until)
-{
-    //paste your solution here
+
+void strcopy(char* fStr, char* sStr, size_t until) {
+    if (!fStr || !sStr || until == 0) {
+        return;
+    }
+    while (until-- > 0 && (*sStr = *fStr)) {
+        sStr++;
+        fStr++;
+    }
 }
-int32_t strcmpp(const char* fStr, const char* sStr)
-{
-    //paste your solution here
+
+int32_t strcmpp(const char* fStr, const char* sStr) {
+    if (!fStr || !sStr) {
+        return 0;
+    }
+    while (*fStr && *fStr == *sStr) {
+        fStr++;
+        sStr++;
+    }
+    return *(const unsigned char*)fStr - *(const unsigned char*)sStr;
 }
+
 char* strcatt(char* fStr, const char* sStr)
 {
     char* ptr = fStr + strlenn(fStr);
@@ -84,6 +116,7 @@ bool is_string_valid(char* str)
     }
     return true;
 }
+
 char* process_string(char* str)
 {
     const size_t length = strlenn(str);
