@@ -4,30 +4,47 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'add here your url', credentialsId: 'add credentialsId'
+                git url: 'https://github.com/godpop1/4task', credentialsId: 'add credentialsId'
             }
         }
         
         stage('Build') {
             steps {
-                // Крок для збірки проекту з Visual Studio
-                // Встановіть правильні шляхи до рішення/проекту та параметри MSBuild
-                bat '"path to MSBuild" test_repos.sln /t:Build /p:Configuration=Release'
+                script {
+                    try {
+                        bat '"C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" test_repos.sln /t:Clean /p:Configuration=Release'
+                    } catch (err) {
+                        echo "Clean step failed, continuing with build. Error: ${err}"
+                        currentBuild.result = 'UNSTABLE'
+                        error("Build failed after clean step.")
+                    }
             }
         }
 
         stage('Test') {
             steps {
-                // Команди для запуску тестів
-                bat "x64\\Debug\\test_repos.exe --gtest_output=xml:test_report.xml"
+                script {
+                    try {
+                        bat "C:\Users\godpop\Downloads\vs_mkr_test1\x64\Debug\test_repos.exe --gtest_output=xml:test_report.xml"
+                    } catch (err) {
+                        echo "Tests failed. Error: ${err}"
+                        currentBuild.result = 'UNSTABLE'
+                        error("Tests failed.")
+                    }
             }
         }
     }
 
     post {
-    always {
-        // Publish test results using the junit step
-         // Specify the path to the XML test result files
+        always {
+         cleanWs()
+        }
+     failure {
+        echo 'Build failed!'
+        }
+
+    success {
+        echo 'Build succeeded!'
+        }
     }
-}
 }
